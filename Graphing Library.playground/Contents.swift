@@ -393,6 +393,7 @@ extension Graph {
         var xAxisLabels = [(frame: CGRect, obstructedLines: Int)]()
         var xAxisObstructedLines = [CGRect?]()
 
+        
         // y-axis labels
         if yAxis.showNumberLabels {
             let labelsView = UIView()
@@ -464,7 +465,7 @@ extension Graph {
                 let label = UILabel()
                 let font = UIFont.systemFont(ofSize: 10)
                 
-                var text = "\(Double(aboveAxisMajorCount - i) * box.interval)"
+                var text = "\(-Double(aboveAxisMajorCount - i) * box.interval)"
                 text = text.replacingOccurrences(of: "\\.0+$", with: "", options: .regularExpression)
                 
                 let textSize = NSString(string: text).size(withAttributes: [.font : font])
@@ -669,7 +670,9 @@ extension Graph {
             functionView.frame = view.frame
             functionView.backgroundColor = .clear
             
-            let step = abs(xAxis.max - xAxis.min) / 1000000
+            
+            let numberOfSteps = max(xAxis.distance, yAxis.distance) * 100
+            let step = abs(xAxis.max - xAxis.min) / numberOfSteps //1000000
             let path = UIBezierPath()
             var hasPlacedFirstPoint = false
             
@@ -714,11 +717,11 @@ extension Graph {
 }
 
 func f(_ x: Double) -> Double {
-    return x * x * x
+    return 5 * cos(x)
 }
-
+f(-10)
+//FIXIT: AXIS RANGES ARE WRONG
 var graph = Graph(of: f)
-//graph.yAxis.min = 0
 graph.maxSize = CGSize.square(sideLength: 1000)
 graph.line.width = 3
 graph.xAxis.range = -30...30
