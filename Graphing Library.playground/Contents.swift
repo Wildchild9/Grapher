@@ -267,10 +267,10 @@ extension Graph {
         let viewLength: Double
         if xAxis.distance > yAxis.distance {
             graphLength = yAxis.distance
-            viewLength = Double(size.width)
+            viewLength = Double(size.height)
         } else {
             graphLength = xAxis.distance
-            viewLength = Double(size.height)
+            viewLength = Double(size.width)
         }
 
         var magnitude = pow(10, ceil(log10(graphLength)))//1.0
@@ -289,10 +289,17 @@ extension Graph {
             default:
                 break
             }
-            if 6...12 ~= graphLength / interval {
-                boxDimension = adjust(value: interval, in: 0...graphLength, toValueIn: 0...viewLength)
+            boxDimension = adjust(value: interval, in: 0...graphLength, toValueIn: 0...viewLength)
+            if 50...100 ~= boxDimension,
+                Double(size.width) / boxDimension * interval >= xAxis.distance,
+                Double(size.height) / boxDimension * interval >= yAxis.distance
+            {
                 break
             }
+//            if 6...12 ~= graphLength / interval {
+//                boxDimension = adjust(value: interval, in: 0...graphLength, toValueIn: 0...viewLength)
+//                break
+//            }
         }
         return (dimension: boxDimension, interval: interval)
     }
@@ -658,8 +665,7 @@ extension Graph {
 func f(_ x: Double) -> Double {
     return 5 * cos(x)
 }
-f(-10)
-//FIXIT: AXIS RANGES ARE WRONG
+
 var graph = Graph(of: f)
 graph.maxSize = CGSize.square(sideLength: 1000)
 graph.line.width = 3
