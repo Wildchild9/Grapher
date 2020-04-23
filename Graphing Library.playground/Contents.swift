@@ -31,6 +31,16 @@ import UIKit
 //#endif
 
 // Namespace all view related things into their own property (e.g. style)
+extension CGRect {
+    func addPadding(_ width: CGFloat) -> CGRect {
+        var rect = self
+        rect.origin.x -= width
+        rect.origin.y -= width
+        rect.size.width += 2 * width
+        rect.size.height += 2 * width
+        return rect
+    }
+}
 class Graph {
     var function: (Double) -> Double
     var line = Line(color: .black, width: 2)
@@ -388,11 +398,7 @@ extension Graph {
             view.addSubview(axisView)
         }
         
-        var yAxisLabels = [(frame: CGRect, obstructedLines: Int)?]()
-        var yAxisMaxObstructedLines = 0
-        var xAxisLabels = [(frame: CGRect, obstructedLines: Int)]()
-        var xAxisObstructedLines = [CGRect?]()
-
+        let labelsPath = UIBezierPath()
         
         // y-axis labels
         if yAxis.showNumberLabels {
@@ -424,20 +430,16 @@ extension Graph {
                     label.frame.origin.y += label.frame.size.height / 2 + 4
                 }
                 if label.frame.minY < 0 || label.frame.maxY > size.height {
-                    yAxisLabels.append(nil)
                     continue
                 }
+                let path = UIBezierPath(rect: label.frame.addPadding(1))
+                labelsPath.append(path)
                 
                 label.text = text
                 label.font = font
                 label.textColor = axisColor
                 label.textAlignment = .right
                 
-                let obstructedLines = Int(floor((label.frame.size.width + 6) / CGFloat(box.dimension / 5)))
-                yAxisLabels.append((frame: label.frame, obstructedLines: obstructedLines))
-                if obstructedLines > yAxisMaxObstructedLines {
-                    yAxisMaxObstructedLines = obstructedLines
-                }
                 labelsView.addSubview(label)
                 
             }
@@ -454,13 +456,9 @@ extension Graph {
             let x = CGFloat(adjust(value: 0, in: xAxis.range, toValueIn: 0...Double(size.width)))
             let y = size.height - CGFloat(adjust(value: 0, in: yAxis.range, toValueIn: 0...Double(size.height)))
             let aboveAxisMajorCount = Int(floor(x / CGFloat(box.dimension)))
-            let aboveAxisMinorCount = Int(floor(x / CGFloat(box.dimension / 5)))
 
             let firstX = x.remainder(dividingBy: CGFloat(box.dimension))
-            
-            let extraMinorCount = aboveAxisMinorCount - aboveAxisMajorCount * 5
-            xAxisObstructedLines.append(contentsOf: Array(repeating: nil, count: extraMinorCount + 1))
-            
+                        
             for (i, x) in stride(from: firstX, through: size.width, by: CGFloat(box.dimension)).enumerated() {
                 let label = UILabel()
                 let font = UIFont.systemFont(ofSize: 10)
@@ -476,40 +474,31 @@ extension Graph {
                 label.frame.origin.y = y + 4
                 
                 if i == aboveAxisMajorCount {
-                    xAxisObstructedLines.append(contentsOf: Array(repeating: nil, count: 5))
                     guard !yAxis.showNumberLabels else {
                         continue
                     }
                     label.frame.origin.y += label.frame.size.height / 2 + 4
                 }
-//                print(text)
+
                 if label.frame.minX < 0 || label.frame.maxX > size.width {
-//                    print("ignored")
-                    xAxisObstructedLines.append(contentsOf: Array(repeating: nil, count: 5))
                     continue
                 }
+                
+                let path = UIBezierPath(rect: label.frame.addPadding(1))
+                labelsPath.append(path)
                 
                 label.text = text
                 label.font = font
                 label.textColor = axisColor
                 label.textAlignment = .center
-                let obstructedLines = Int((label.frame.size.width + 2) / CGFloat(box.dimension / 5 * 2)) / 2
-                xAxisLabels.append((frame: label.frame, obstructedLines: obstructedLines + 1))
-                if xAxisObstructedLines.count < obstructedLines / 2 + 1 {
-                    let framesCount = obstructedLines + 1 - (obstructedLines / 2 + 1 - xAxisObstructedLines.count)
-                    xAxisObstructedLines.removeAll()
-                    xAxisObstructedLines.append(contentsOf: Array(repeating: label.frame, count: framesCount))
-                    xAxisObstructedLines.append(contentsOf: Array(repeating: label.frame, count: obstructedLines + 1))
-                } else {
-                    xAxisObstructedLines.removeLast(obstructedLines / 2 + 1)
-                    xAxisObstructedLines.append(contentsOf: Array(repeating: label.frame, count: obstructedLines + 1))
-                }
-                xAxisObstructedLines.append(contentsOf: Array(repeating: nil, count: 5 - obstructedLines / 2))
-                labelsView.addSubview(label)
                 
+                labelsView.addSubview(label)
             }
             view.addSubview(labelsView)
         }
+
+        let minorGridLinesPath = UIBezierPath()
+        let majorGridLinesPath = UIBezierPath()
 
         // y-axis grid lines
         if yAxis.showMinorGridLines || yAxis.showMajorGridLines {
@@ -532,51 +521,16 @@ extension Graph {
                     continue
                 }
                 
-                if yAxis.showMinorGridLines || yAxis.showMajorGridLines {
-                    var strokeColor: UIColor
-                    var lineWidth: CGFloat
-                    if isMajorGridLine && yAxis.showMajorGridLines {
-                        lineWidth = 0.5
-                        var white: CGFloat = 0
-                        axisColor.getWhite(&white, alpha: nil)
-                        white = white > 0.5 ? 0.75 : 0.25
-                        strokeColor = UIColor(white: white, alpha: 1) //0.25
-                    } else {
-                        lineWidth = 0.25
-                        strokeColor = UIColor(white: 0.5, alpha: 1) //0.5
-                    }
-                    
-                    let path = UIBezierPath()
-                    
-                    path.move(to: CGPoint(x: 0, y: y))
-
-                    if yAxis.showNumberLabels, isMajorGridLine, let labelFrame = yAxisLabels[i / 5]?.frame {
-                        path.addLine(to: CGPoint(x: labelFrame.minX - 1, y: y))
-                        path.move(to: CGPoint(x: labelFrame.maxX + 1, y: y))
-                    }
-                    if xAxis.showNumberLabels, i > aboveAxisMinorCount, let textHeight = xAxisLabels.first?.frame.height, axisY...(axisY + 4 + textHeight) ~= y {
-                        for (labelFrame, _) in xAxisLabels {
-                            path.addLine(to: CGPoint(x: labelFrame.minX - 1, y: y))
-                            path.move(to: CGPoint(x: labelFrame.maxX + 1, y: y))
-                        }
-                    }
-                    path.addLine(to: CGPoint(x: size.width, y: y))
-                    
-                    let layer = CAShapeLayer()
-                    
-                    layer.path = path.cgPath
-                    layer.fillColor = UIColor.clear.cgColor
-                    layer.strokeColor = strokeColor.cgColor//UIColor.black.withAlphaComponent(0.8).cgColor
-                    layer.lineWidth = lineWidth//0.75
-                    layer.lineCap = .butt
-                    layer.allowsEdgeAntialiasing = true
-
-                    gridLineView.layer.addSublayer(layer)
-                }
+                let path = UIBezierPath()
+                path.move(to: CGPoint(x: 0, y: y))
+                path.addLine(to: CGPoint(x: size.width, y: y))
                 
+                if isMajorGridLine && yAxis.showMajorGridLines {
+                    majorGridLinesPath.append(path)
+                } else {
+                    minorGridLinesPath.append(path)
+                }
             }
-            
-            view.addSubview(gridLineView)
         }
 
         // x-axis grid lines
@@ -586,7 +540,6 @@ extension Graph {
             gridLineView.backgroundColor = .clear
             
             let x = CGFloat(adjust(value: 0, in: xAxis.range, toValueIn: 0...Double(size.width)))
-            let y = size.height - CGFloat(adjust(value: 0, in: yAxis.range, toValueIn: 0...Double(size.height)))
             let aboveAxisMinorCount = Int(floor(x / CGFloat(box.dimension / 5)))
             let firstX = x.remainder(dividingBy: CGFloat(box.dimension / 5))
             for (i, x) in stride(from: firstX, through: size.width, by: CGFloat(box.dimension / 5)).enumerated() {
@@ -600,69 +553,55 @@ extension Graph {
                 guard i != aboveAxisMinorCount else {
                     continue
                 }
-                if xAxis.showMinorGridLines || xAxis.showMajorGridLines {
-                    var strokeColor: UIColor
-                    var lineWidth: CGFloat
-                    if isMajorGridLine && xAxis.showMajorGridLines {
-                        lineWidth = 0.5
-                        var white: CGFloat = 0
-                        axisColor.getWhite(&white, alpha: nil)
-                        white = white > 0.5 ? 0.75 : 0.25
-                        strokeColor = UIColor(white: white, alpha: 1) //0.25
-                    } else {
-                        lineWidth = 0.25
-                        strokeColor = UIColor(white: 0.5, alpha: 1) //0.5
-                    }
-                    
-                    let path = UIBezierPath()
-                    
-                    path.move(to: CGPoint(x: x, y: 0))
-                    
-                    let lineNumber = aboveAxisMinorCount - i
-                    var frames = [CGRect]()
-
-                    if yAxis.showNumberLabels && lineNumber > 0 && lineNumber <= yAxisMaxObstructedLines {
-                        frames = Array(yAxisLabels.lazy.compactMap { $0 }.filter { $0.obstructedLines >= lineNumber }.map { $0.frame })
-
-                        let aboveAxisFrames = frames.filter { $0.origin.y < y }
-                        for frame in aboveAxisFrames {
-                            path.addLine(to: CGPoint(x: x, y: frame.minY - 1))
-                            path.move(to: CGPoint(x: x, y: frame.maxY + 1))
-                        }
-                    }
-                    
-                    if xAxis.showNumberLabels, let frame = xAxisObstructedLines[i] {
-                        path.addLine(to: CGPoint(x: x, y: frame.minY - 1))
-                        path.move(to: CGPoint(x: x, y: frame.maxY + 1))
-                    }
-                    if yAxis.showNumberLabels && lineNumber > 0 && lineNumber <= yAxisMaxObstructedLines {
-                        let belowAxisFrames = frames.filter { $0.origin.y > y }
-                        for frame in belowAxisFrames {
-                            path.addLine(to: CGPoint(x: x, y: frame.minY - 1))
-                            path.move(to: CGPoint(x: x, y: frame.maxY + 1))
-                        }
-                    }
-                    
-                    
-                    path.addLine(to: CGPoint(x: x, y: size.height))
-                    
-                    let layer = CAShapeLayer()
-                    
-                    layer.path = path.cgPath
-                    layer.fillColor = UIColor.clear.cgColor
-                    layer.strokeColor = strokeColor.cgColor//UIColor.black.withAlphaComponent(0.8).cgColor
-                    layer.lineWidth = lineWidth//0.75
-                    layer.lineCap = .butt
-                    layer.allowsEdgeAntialiasing = true
-                    
-                    gridLineView.layer.addSublayer(layer)
-                }
                 
-            }
-            
-            view.addSubview(gridLineView)
-        }
+                let path = UIBezierPath()
+                path.move(to: CGPoint(x: x, y: 0))
+                path.addLine(to: CGPoint(x: x, y: size.height))
 
+                if isMajorGridLine && xAxis.showMajorGridLines {
+                    majorGridLinesPath.append(path)
+                } else {
+                    minorGridLinesPath.append(path)
+                }
+            }
+        }
+        
+        
+        if xAxis.showMinorGridLines || xAxis.showMajorGridLines || yAxis.showMinorGridLines || yAxis.showMajorGridLines {
+            let textLayer = CAShapeLayer()
+            labelsPath.append(UIBezierPath(rect: view.frame))
+            textLayer.path = labelsPath.cgPath
+            textLayer.fillRule = .evenOdd
+            
+            var white: CGFloat = 0
+            axisColor.getWhite(&white, alpha: nil)
+            let majorWhite: CGFloat = white > 0.5 ? 0.75 : 0.25
+            
+            let majorGridLayer = CAShapeLayer()
+            majorGridLayer.path = majorGridLinesPath.cgPath
+            majorGridLayer.fillColor = UIColor.clear.cgColor
+            majorGridLayer.strokeColor = UIColor(white: majorWhite, alpha: 1).cgColor
+            majorGridLayer.lineWidth = 0.5
+            majorGridLayer.lineCap = .butt
+            majorGridLayer.allowsEdgeAntialiasing = true
+            
+            let minorGridLayer = CAShapeLayer()
+            minorGridLayer.path = minorGridLinesPath.cgPath
+            minorGridLayer.fillColor = UIColor.clear.cgColor
+            minorGridLayer.strokeColor = UIColor(white: 0.5, alpha: 1).cgColor
+            minorGridLayer.lineWidth = 0.25
+            minorGridLayer.lineCap = .butt
+            minorGridLayer.allowsEdgeAntialiasing = true
+            
+            let gridView = UIView()
+            gridView.frame = view.frame
+            gridView.backgroundColor = .clear
+            gridView.layer.addSublayer(minorGridLayer)
+            gridView.layer.addSublayer(majorGridLayer)
+            gridView.layer.mask = textLayer
+            
+            view.addSubview(gridView)
+        }
         
         // Add function
         do {
