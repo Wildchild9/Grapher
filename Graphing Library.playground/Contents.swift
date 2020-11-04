@@ -1,35 +1,8 @@
 import UIKit
-//import SwiftUI
+import SwiftUI
 
-
-//#if !canImport(SwiftUI)
-//public struct UnitPoint: Hashable {
-//
-//    public var x: CGFloat
-//    public var y: CGFloat
-//
-//    @inlinable public init() {
-//        self = UnitPoint.zero
-//    }
-//
-//    @inlinable public init(x: CGFloat, y: CGFloat) {
-//        self.x = x
-//        self.y = y
-//    }
-//
-//    public static let zero = UnitPoint(x: 0, y: 0)
-//    public static let center = UnitPoint(x: 0.5, y: 0.5)
-//    public static let leading = UnitPoint(x: 0, y: 0.5)
-//    public static let trailing = UnitPoint(x: 1, y: 0.5)
-//    public static let top = UnitPoint(x: 0.5, y: 0)
-//    public static let bottom = UnitPoint(x: 0.5, y: 1)
-//    public static let topLeading = UnitPoint(x: 0, y: 0)
-//    public static let topTrailing = UnitPoint(x: 0, y: 1)
-//    public static let bottomLeading = UnitPoint(x: 1, y: 1)
-//    public static let bottomTrailing = UnitPoint(x: 1, y: 0)
-//}
-//#endif
-
+EmptyView()
+    .padding()
 // Namespace all view related things into their own property (e.g. style)
 extension CGRect {
     func addPadding(_ width: CGFloat) -> CGRect {
@@ -42,68 +15,13 @@ extension CGRect {
     }
 }
 class Graph {
-    var function: (Double) -> Double
-    var line = Line(color: .black, width: 2)
+    var function: (Double) -> Double?
+    var line = Line(color: .black, width: 2.5)
     var backgroundColor: UIColor = .white
     var axisColor: UIColor = .black
 
     var xAxis = Axis()
     var yAxis = Axis()
-    
-    
-//    var showHorizontalMinorGridLines: Bool = false
-//    var showHorizontalMajorGridLines: Bool = false
-//
-//    var showVerticalMinorGridLines: Bool = false
-//    var showVerticalMajorGridLines: Bool = false
-//
-//    var showHorizontalGridLines: Bool {
-//        get {
-//            return showHorizontalMinorGridLines && showHorizontalMajorGridLines
-//        }
-//        set {
-//            showHorizontalMinorGridLines = newValue
-//            showHorizontalMajorGridLines = newValue
-//        }
-//    }
-//    var showVerticalGridLines: Bool {
-//        get {
-//            return showVerticalMinorGridLines && showVerticalMajorGridLines
-//        }
-//        set {
-//            showVerticalMinorGridLines = newValue
-//            showVerticalMajorGridLines = newValue
-//        }
-//    }
-//
-//    var showMinorGridLines: Bool {
-//        get {
-//            return showHorizontalMinorGridLines && showVerticalMinorGridLines
-//        }
-//        set {
-//            showHorizontalMinorGridLines = newValue
-//            showVerticalMinorGridLines = newValue
-//        }
-//    }
-//    var showMajorGridLines: Bool {
-//        get {
-//            return showHorizontalMajorGridLines && showVerticalMajorGridLines
-//        }
-//        set {
-//            showHorizontalMajorGridLines = newValue
-//            showVerticalMajorGridLines = newValue
-//        }
-//    }
-//
-//    var showAllGridLines: Bool {
-//        get {
-//            return showMinorGridLines && showMajorGridLines
-//        }
-//        set {
-//            showMinorGridLines = newValue
-//            showMajorGridLines = newValue
-//        }
-//    }
     
     var showMinorGridLines: Bool {
         get {
@@ -149,6 +67,10 @@ class Graph {
 
     var maxSize = CGSize(width: 500, height: 500)
 
+    init(of function: @escaping (Double) -> Double?) {
+        self.function = function
+    }
+    
     init(of function: @escaping (Double) -> Double) {
         self.function = function
     }
@@ -163,7 +85,7 @@ extension Graph {
 
 extension Graph {
     struct Axis {
-        var range: ClosedRange<Double> = -10...10
+        var range: ClosedRange<Double> = -50...50
 
         var showNumberLabels = true
         var showMinorGridLines = true
@@ -349,49 +271,27 @@ extension Graph {
             box = self.gridBox
         }
 
-        // Draw x-axis
+        // Draw axes
         do {
             let axisView = UIView()
             axisView.frame = view.frame
             axisView.backgroundColor = .clear
             
             let y = size.height - CGFloat(adjust(value: 0, in: yAxis.range, toValueIn: 0...Double(size.height)))
-            let x1: CGFloat = 0
-            let x2 = size.width
-
-            let path = UIBezierPath()
-
-            path.move(to: CGPoint(x: x1, y: y))
-            path.addLine(to: CGPoint(x: x2, y: y))
-
-            let layer = CAShapeLayer()
-            
-            layer.path = path.cgPath
-            layer.fillColor = UIColor.clear.cgColor
-            layer.strokeColor = axisColor.cgColor
-            layer.lineWidth = 1
-            layer.lineCap = .butt
-            layer.allowsEdgeAntialiasing = true
-
-            axisView.layer.addSublayer(layer)
-            view.addSubview(axisView)
-        }
-        
-        // Draw y-axis
-        do {
-            let axisView = UIView()
-            axisView.frame = view.frame
-            axisView.backgroundColor = .clear
-            
             let x = CGFloat(adjust(value: 0, in: xAxis.range, toValueIn: 0...Double(size.width)))
-            let y1 = CGFloat.zero
-            let y2 = size.height
-            
+
+
             let path = UIBezierPath()
+
+            // x-axis
+            path.move(to: CGPoint(x: 0, y: y))
+            path.addLine(to: CGPoint(x: size.width, y: y))
             
-            path.move(to: CGPoint(x: x, y: y1))
-            path.addLine(to: CGPoint(x: x, y: y2))
-                        
+            
+            // y-axis
+            path.move(to: CGPoint(x: x, y: 0))
+            path.addLine(to: CGPoint(x: x, y: size.height))
+
             let layer = CAShapeLayer()
             
             layer.path = path.cgPath
@@ -617,14 +517,17 @@ extension Graph {
             functionView.backgroundColor = .clear
             
             
-            let numberOfSteps = max(xAxis.distance, yAxis.distance) * 100
+            let numberOfSteps = Double(size.width) * 200 //xAxis.distance * 100
             let step = abs(xAxis.max - xAxis.min) / numberOfSteps //1000000
             let path = UIBezierPath()
-            var hasPlacedFirstPoint = false
+            var movePoint = true
             
             for x in stride(from: xAxis.min, through: xAxis.max, by: step) {
                 
-                let y = function(x)
+                guard let y = function(x) else {
+                    movePoint = true
+                    continue
+                }
                 
                 if !yAxis.range.contains(y) {
                     continue
@@ -635,11 +538,11 @@ extension Graph {
                 
                 let p = CGPoint(x: adjX, y: adjY)
                 
-                if hasPlacedFirstPoint {
-                    path.addLine(to: p)
-                } else {
+                if movePoint {
                     path.move(to: p)
-                    hasPlacedFirstPoint = true
+                    movePoint = false
+                } else {
+                    path.addLine(to: p)
                 }
                 
             }
@@ -661,16 +564,61 @@ extension Graph {
         return view
     }
 }
+extension FloatingPoint {
+    public func isAlmostEqual(
+        to other: Self,
+        tolerance: Self = Self.ulpOfOne.squareRoot()
+    ) -> Bool {
+        assert(tolerance >= .ulpOfOne && tolerance < 1, "tolerance should be in [.ulpOfOne, 1).")
+        guard self.isFinite && other.isFinite else {
+            return rescaledAlmostEqual(to: other, tolerance: tolerance)
+        }
+        let scale = max(abs(self), abs(other), .leastNormalMagnitude)
+        return abs(self - other) < scale*tolerance
+    }
+    
+    public func isAlmostZero(
+        absoluteTolerance tolerance: Self = Self.ulpOfOne.squareRoot()
+    ) -> Bool {
+        assert(tolerance > 0)
+        return abs(self) < tolerance
+    }
+    
+    @usableFromInline
+    internal func rescaledAlmostEqual(to other: Self, tolerance: Self) -> Bool {
+        if self.isNaN || other.isNaN { return false }
+        if self.isInfinite {
+            if other.isInfinite { return self == other }
+            let scaledSelf = Self(sign: self.sign,
+                                  exponent: Self.greatestFiniteMagnitude.exponent,
+                                  significand: 1)
+            let scaledOther = Self(sign: .plus,
+                                   exponent: -1,
+                                   significand: other)
+            return scaledSelf.isAlmostEqual(to: scaledOther, tolerance: tolerance)
+        }
+        return other.rescaledAlmostEqual(to: self, tolerance: tolerance)
+    }
+}
 
-func f(_ x: Double) -> Double {
-    return 5 * cos(x)
+extension Double {
+    static let e = M_E
+}
+
+func f(_ x: Double) -> Double? {
+//    let r = x.remainder(dividingBy: Double.pi)
+//    if r.isAlmostEqual(to: .pi / 2, tolerance: 0.001) {
+//        return nil
+//    }
+//    return tan(x)
+    return pow(.e, -pow(x, 2))
+//    return sin(2 * sin(2 * sin(2 * sin(x))))
 }
 
 var graph = Graph(of: f)
-graph.maxSize = CGSize.square(sideLength: 1000)
-graph.line.width = 3
-graph.xAxis.range = -30...30
-graph.yAxis.range = -20...20
+graph.maxSize = CGSize.square(sideLength: 750)
+graph.xAxis.range = -2.5...2.5  //-30...30
+graph.yAxis.range = -0.5...1.5  //-20...20
 graph.applyStyle(.dark)
 graph
 
