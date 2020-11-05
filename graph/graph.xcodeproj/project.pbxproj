@@ -8,26 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		C245E9DF2451FC7400F842EB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245E9DE2451FC7400F842EB /* main.swift */; };
-		C245E9F62451FD3100F842EB /* Replacement Methods.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245E9E62451FD3100F842EB /* Replacement Methods.swift */; };
-		C245E9F72451FD3100F842EB /* Simplification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245E9E72451FD3100F842EB /* Simplification.swift */; };
-		C245E9F82451FD3100F842EB /* Contains Methods.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245E9E82451FD3100F842EB /* Contains Methods.swift */; };
-		C245E9F92451FD3100F842EB /* Literal Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245E9EA2451FD3100F842EB /* Literal Description.swift */; };
-		C245E9FA2451FD3100F842EB /* Latex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245E9EB2451FD3100F842EB /* Latex.swift */; };
-		C245E9FB2451FD3100F842EB /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245E9EC2451FD3100F842EB /* Operators.swift */; };
-		C245E9FC2451FD3100F842EB /* Evaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245E9ED2451FD3100F842EB /* Evaluation.swift */; };
-		C245E9FD2451FD3100F842EB /* Term Extraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245E9EE2451FD3100F842EB /* Term Extraction.swift */; };
-		C245E9FE2451FD3100F842EB /* Computed Properties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245E9EF2451FD3100F842EB /* Computed Properties.swift */; };
-		C245E9FF2451FD3100F842EB /* ExpressibleByIntegerLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245E9F12451FD3100F842EB /* ExpressibleByIntegerLiteral.swift */; };
-		C245EA002451FD3100F842EB /* Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245E9F22451FD3100F842EB /* Equatable.swift */; };
-		C245EA012451FD3100F842EB /* ExpressibleByStringLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245E9F32451FD3100F842EB /* ExpressibleByStringLiteral.swift */; };
-		C245EA022451FD3100F842EB /* CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245E9F42451FD3100F842EB /* CustomStringConvertible.swift */; };
-		C245EA032451FD3100F842EB /* Solving.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245E9F52451FD3100F842EB /* Solving.swift */; };
-		C245EA052451FD3700F842EB /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245EA042451FD3700F842EB /* Expression.swift */; };
-		C245EA192451FD8600F842EB /* Regex Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245EA082451FD8600F842EB /* Regex Extensions.swift */; };
-		C245EA1A2451FD8600F842EB /* Quick Regex Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245EA092451FD8600F842EB /* Quick Regex Functions.swift */; };
 		C245EA1C2451FD8600F842EB /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245EA0C2451FD8600F842EB /* Collection.swift */; };
 		C245EA1D2451FD8600F842EB /* String Integer Subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245EA0D2451FD8600F842EB /* String Integer Subscript.swift */; };
-		C245EA202451FD8600F842EB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245EA102451FD8600F842EB /* String.swift */; };
 		C245EA212451FD8600F842EB /* StringProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245EA112451FD8600F842EB /* StringProtocol.swift */; };
 		C245EA232451FD8600F842EB /* NSTextCheckingResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245EA132451FD8600F842EB /* NSTextCheckingResult.swift */; };
 		C245EA252451FD8600F842EB /* Benchmarking.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245EA162451FD8600F842EB /* Benchmarking.swift */; };
@@ -39,6 +21,9 @@
 		C245EA322452055500F842EB /* EdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245EA312452055500F842EB /* EdgeInsets.swift */; };
 		C245EA342452096E00F842EB /* CGSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245EA332452096E00F842EB /* CGSize.swift */; };
 		C245EA36245209EC00F842EB /* FloatingPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245EA35245209EC00F842EB /* FloatingPoint.swift */; };
+		C283D15E2553621100EEE6B7 /* Parsable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C283D15C2553621100EEE6B7 /* Parsable.swift */; };
+		C283D15F2553621100EEE6B7 /* Pattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = C283D15D2553621100EEE6B7 /* Pattern.swift */; };
+		C283D1622553622400EEE6B7 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = C283D1612553622400EEE6B7 /* Expression.swift */; };
 		C290618824526B5B00521110 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = C290618724526B5B00521110 /* ArgumentParser */; };
 		C290618A24526B9500521110 /* graph in CopyFiles */ = {isa = PBXBuildFile; fileRef = C245E9DB2451FC7400F842EB /* graph */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -68,26 +53,8 @@
 /* Begin PBXFileReference section */
 		C245E9DB2451FC7400F842EB /* graph */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = graph; sourceTree = BUILT_PRODUCTS_DIR; };
 		C245E9DE2451FC7400F842EB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		C245E9E62451FD3100F842EB /* Replacement Methods.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Replacement Methods.swift"; sourceTree = "<group>"; };
-		C245E9E72451FD3100F842EB /* Simplification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Simplification.swift; sourceTree = "<group>"; };
-		C245E9E82451FD3100F842EB /* Contains Methods.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Contains Methods.swift"; sourceTree = "<group>"; };
-		C245E9EA2451FD3100F842EB /* Literal Description.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Literal Description.swift"; sourceTree = "<group>"; };
-		C245E9EB2451FD3100F842EB /* Latex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Latex.swift; sourceTree = "<group>"; };
-		C245E9EC2451FD3100F842EB /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
-		C245E9ED2451FD3100F842EB /* Evaluation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Evaluation.swift; sourceTree = "<group>"; };
-		C245E9EE2451FD3100F842EB /* Term Extraction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Term Extraction.swift"; sourceTree = "<group>"; };
-		C245E9EF2451FD3100F842EB /* Computed Properties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Computed Properties.swift"; sourceTree = "<group>"; };
-		C245E9F12451FD3100F842EB /* ExpressibleByIntegerLiteral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpressibleByIntegerLiteral.swift; sourceTree = "<group>"; };
-		C245E9F22451FD3100F842EB /* Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Equatable.swift; sourceTree = "<group>"; };
-		C245E9F32451FD3100F842EB /* ExpressibleByStringLiteral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpressibleByStringLiteral.swift; sourceTree = "<group>"; };
-		C245E9F42451FD3100F842EB /* CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomStringConvertible.swift; sourceTree = "<group>"; };
-		C245E9F52451FD3100F842EB /* Solving.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Solving.swift; sourceTree = "<group>"; };
-		C245EA042451FD3700F842EB /* Expression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Expression.swift; sourceTree = "<group>"; };
-		C245EA082451FD8600F842EB /* Regex Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Regex Extensions.swift"; sourceTree = "<group>"; };
-		C245EA092451FD8600F842EB /* Quick Regex Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Quick Regex Functions.swift"; sourceTree = "<group>"; };
 		C245EA0C2451FD8600F842EB /* Collection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 		C245EA0D2451FD8600F842EB /* String Integer Subscript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String Integer Subscript.swift"; sourceTree = "<group>"; };
-		C245EA102451FD8600F842EB /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		C245EA112451FD8600F842EB /* StringProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringProtocol.swift; sourceTree = "<group>"; };
 		C245EA132451FD8600F842EB /* NSTextCheckingResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSTextCheckingResult.swift; sourceTree = "<group>"; };
 		C245EA162451FD8600F842EB /* Benchmarking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Benchmarking.swift; sourceTree = "<group>"; };
@@ -99,6 +66,9 @@
 		C245EA312452055500F842EB /* EdgeInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeInsets.swift; sourceTree = "<group>"; };
 		C245EA332452096E00F842EB /* CGSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGSize.swift; sourceTree = "<group>"; };
 		C245EA35245209EC00F842EB /* FloatingPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPoint.swift; sourceTree = "<group>"; };
+		C283D15C2553621100EEE6B7 /* Parsable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parsable.swift; sourceTree = "<group>"; };
+		C283D15D2553621100EEE6B7 /* Pattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pattern.swift; sourceTree = "<group>"; };
+		C283D1612553622400EEE6B7 /* Expression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expression.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,9 +104,7 @@
 			children = (
 				C245EA2C2451FE2200F842EB /* Graph */,
 				C245E9DE2451FC7400F842EB /* main.swift */,
-				C245EA042451FD3700F842EB /* Expression.swift */,
-				C245E9E52451FD3100F842EB /* Expression */,
-				C245EA062451FD8600F842EB /* Regular Expressions */,
+				C283D15B255361AB00EEE6B7 /* Expression */,
 				C245EA0B2451FD8600F842EB /* Extensions */,
 				C245EA272451FDFF00F842EB /* Types */,
 				C245EA152451FD8600F842EB /* Other */,
@@ -144,58 +112,11 @@
 			path = graph;
 			sourceTree = "<group>";
 		};
-		C245E9E52451FD3100F842EB /* Expression */ = {
-			isa = PBXGroup;
-			children = (
-				C245E9E62451FD3100F842EB /* Replacement Methods.swift */,
-				C245E9E72451FD3100F842EB /* Simplification.swift */,
-				C245E9E82451FD3100F842EB /* Contains Methods.swift */,
-				C245E9E92451FD3100F842EB /* String Representations */,
-				C245E9EC2451FD3100F842EB /* Operators.swift */,
-				C245E9ED2451FD3100F842EB /* Evaluation.swift */,
-				C245E9EE2451FD3100F842EB /* Term Extraction.swift */,
-				C245E9EF2451FD3100F842EB /* Computed Properties.swift */,
-				C245E9F02451FD3100F842EB /* Conformances */,
-				C245E9F52451FD3100F842EB /* Solving.swift */,
-			);
-			path = Expression;
-			sourceTree = "<group>";
-		};
-		C245E9E92451FD3100F842EB /* String Representations */ = {
-			isa = PBXGroup;
-			children = (
-				C245E9EA2451FD3100F842EB /* Literal Description.swift */,
-				C245E9EB2451FD3100F842EB /* Latex.swift */,
-			);
-			path = "String Representations";
-			sourceTree = "<group>";
-		};
-		C245E9F02451FD3100F842EB /* Conformances */ = {
-			isa = PBXGroup;
-			children = (
-				C245E9F12451FD3100F842EB /* ExpressibleByIntegerLiteral.swift */,
-				C245E9F22451FD3100F842EB /* Equatable.swift */,
-				C245E9F32451FD3100F842EB /* ExpressibleByStringLiteral.swift */,
-				C245E9F42451FD3100F842EB /* CustomStringConvertible.swift */,
-			);
-			path = Conformances;
-			sourceTree = "<group>";
-		};
-		C245EA062451FD8600F842EB /* Regular Expressions */ = {
-			isa = PBXGroup;
-			children = (
-				C245EA082451FD8600F842EB /* Regex Extensions.swift */,
-				C245EA092451FD8600F842EB /* Quick Regex Functions.swift */,
-			);
-			path = "Regular Expressions";
-			sourceTree = "<group>";
-		};
 		C245EA0B2451FD8600F842EB /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
 				C245EA0C2451FD8600F842EB /* Collection.swift */,
 				C245EA0D2451FD8600F842EB /* String Integer Subscript.swift */,
-				C245EA102451FD8600F842EB /* String.swift */,
 				C245EA112451FD8600F842EB /* StringProtocol.swift */,
 				C245EA132451FD8600F842EB /* NSTextCheckingResult.swift */,
 				C245EA2F2451FF4A00F842EB /* CGRect.swift */,
@@ -230,6 +151,16 @@
 			children = (
 			);
 			path = Graph;
+			sourceTree = "<group>";
+		};
+		C283D15B255361AB00EEE6B7 /* Expression */ = {
+			isa = PBXGroup;
+			children = (
+				C283D15C2553621100EEE6B7 /* Parsable.swift */,
+				C283D15D2553621100EEE6B7 /* Pattern.swift */,
+				C283D1612553622400EEE6B7 /* Expression.swift */,
+			);
+			path = Expression;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -297,38 +228,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C245EA192451FD8600F842EB /* Regex Extensions.swift in Sources */,
-				C245E9FD2451FD3100F842EB /* Term Extraction.swift in Sources */,
 				C245EA322452055500F842EB /* EdgeInsets.swift in Sources */,
-				C245E9FF2451FD3100F842EB /* ExpressibleByIntegerLiteral.swift in Sources */,
 				C245EA302451FF4A00F842EB /* CGRect.swift in Sources */,
-				C245E9F92451FD3100F842EB /* Literal Description.swift in Sources */,
-				C245E9F82451FD3100F842EB /* Contains Methods.swift in Sources */,
-				C245E9FB2451FD3100F842EB /* Operators.swift in Sources */,
-				C245EA022451FD3100F842EB /* CustomStringConvertible.swift in Sources */,
+				C283D15F2553621100EEE6B7 /* Pattern.swift in Sources */,
 				C245EA2B2451FDFF00F842EB /* Operator.swift in Sources */,
-				C245EA012451FD3100F842EB /* ExpressibleByStringLiteral.swift in Sources */,
-				C245E9FE2451FD3100F842EB /* Computed Properties.swift in Sources */,
 				C245EA36245209EC00F842EB /* FloatingPoint.swift in Sources */,
-				C245EA002451FD3100F842EB /* Equatable.swift in Sources */,
-				C245E9FC2451FD3100F842EB /* Evaluation.swift in Sources */,
+				C283D15E2553621100EEE6B7 /* Parsable.swift in Sources */,
 				C245EA1C2451FD8600F842EB /* Collection.swift in Sources */,
 				C245EA212451FD8600F842EB /* StringProtocol.swift in Sources */,
-				C245EA032451FD3100F842EB /* Solving.swift in Sources */,
-				C245EA052451FD3700F842EB /* Expression.swift in Sources */,
-				C245E9F72451FD3100F842EB /* Simplification.swift in Sources */,
 				C245EA252451FD8600F842EB /* Benchmarking.swift in Sources */,
 				C245EA2E2451FEAB00F842EB /* Edge.swift in Sources */,
 				C245EA342452096E00F842EB /* CGSize.swift in Sources */,
-				C245EA202451FD8600F842EB /* String.swift in Sources */,
-				C245E9F62451FD3100F842EB /* Replacement Methods.swift in Sources */,
 				C245EA1D2451FD8600F842EB /* String Integer Subscript.swift in Sources */,
-				C245E9FA2451FD3100F842EB /* Latex.swift in Sources */,
 				C245EA262451FD8600F842EB /* Numeric Functions.swift in Sources */,
 				C245EA2A2451FDFF00F842EB /* Either.swift in Sources */,
-				C245EA1A2451FD8600F842EB /* Quick Regex Functions.swift in Sources */,
 				C245E9DF2451FC7400F842EB /* main.swift in Sources */,
 				C245EA232451FD8600F842EB /* NSTextCheckingResult.swift in Sources */,
+				C283D1622553622400EEE6B7 /* Expression.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -67,7 +67,10 @@ class FunctionGraph {
     var maxSize = CGSize(width: 500, height: 500)
     
     init(of function: Expression) {
-        self.function = { function.evaluate(withX: $0) }
+        self.function = { x in
+            try! LookupTable.updateConstant(withIdentifier: "x", to: x)
+            return function.evaluated()
+        }
     }
     init(of function: @escaping (Double) -> Double?) {
         self.function = function
@@ -830,10 +833,15 @@ struct Graph: ParsableCommand {
 //        guard let eq = equation.first else {
 //            return
 //        }
+        try defineValuesForLookupTable()
+        
+        
+        
         
         let formattedEquation = equation.replacingOccurrences(of: #"^([yY]|[a-zA-Z]\([xX]\))\s*=\s*"#, with: "", options: .regularExpression)
 
-        let expression = Expression(formattedEquation, simplify: false)
+        let expression = Expression(formattedEquation)
+        
         let graph = FunctionGraph(of: expression)
         graph.maxSize = CGSize(width: 400, height: 400)
         graph.line.width = lineWidth
