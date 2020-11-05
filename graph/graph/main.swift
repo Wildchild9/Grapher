@@ -840,7 +840,13 @@ struct Graph: ParsableCommand {
         
         let formattedEquation = equation.replacingOccurrences(of: #"^([yY]|[a-zA-Z]\([xX]\))\s*=\s*"#, with: "", options: .regularExpression)
 
-        let expression = Expression(formattedEquation)
+        let expression: Expression
+        do {
+            expression = try Expression(formattedEquation)
+        } catch let error as ParseError {
+            print(error.localizedDescription)
+            return
+        }
         
         let graph = FunctionGraph(of: expression)
         graph.maxSize = CGSize(width: 400, height: 400)

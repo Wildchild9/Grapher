@@ -10,7 +10,7 @@ import Foundation
 
 //MARK: - TokenPattern
 
-protocol TokenPattern {
+protocol TokenPattern: CustomStringConvertible {
     func parse(from context: TokenParsingContext, index: TokenPatternIndex) -> TokenParsingResult
 }
 
@@ -115,7 +115,7 @@ final class TokenParsingContext {
         self.currentIndex = recoveryPoint.parsingIndex
         return recoveryPoint.pattern.parse(from: self, index: recoveryPoint.index)
     }
-
+    
     final class RecoveryPoint {
         var parsingIndex: String.Index
         var pattern: TokenPattern
@@ -147,21 +147,27 @@ struct LogicalOrTokenPattern<P1, P2>: TokenPattern where P1: TokenPattern, P2: T
     var leftPattern: P1
     var rightPattern: P2
     
+    var description: String {
+        return "(" + leftPattern.description + " || " + rightPattern.description + ")"
+    }
+    
     init(left: P1, right: P2) {
         self.leftPattern = left
         self.rightPattern = right
+        
+        // Check if any are interfering patterns, if not, do not add recovery point
     }
     
     func parse(from context: TokenParsingContext, index: TokenPatternIndex) -> TokenParsingResult {
         
         // Get current index of context for new recovery point that is added if leftResult is successful
         let indexSnapshot = context.currentIndex
-
+        
         let leftResult = leftPattern.parse(from: context, index: index.childIndex(stepping: .left))
         
         // Update recovery points that are children of index, adding right-hand pattern
         context.updateRecovery(from: index) { $0 || rightPattern }
-
+        
         guard case .success = leftResult else {
             return rightPattern.parse(from: context, index: index)
         }
@@ -180,11 +186,14 @@ struct SequentialTokenPattern<P1, P2>: TokenPattern where P1: TokenPattern, P2: 
     
     var pattern1: P1
     var pattern2: P2
-
+    
+    var description: String {
+        return "(" + pattern1.description + " + " + pattern2.description + ")"
+    }
     func parse(from context: TokenParsingContext, index: TokenPatternIndex) -> TokenParsingResult {
         let result1 = pattern1.parse(from: context, index: index.childIndex(stepping: .left))
         context.updateRecovery(from: index) { $0 + pattern2 }
-
+        
         guard case .success = result1 else {
             return .failure
         }
@@ -199,6 +208,10 @@ func +<T, U>(lhs: T, rhs: U) -> SequentialTokenPattern<T, U> {
 final class AnyTokenPattern: TokenPattern {
     private let pattern: TokenPattern
     
+    var description: String {
+        return pattern.description
+    }
+    
     init(_ pattern: TokenPattern) {
         self.pattern = pattern
     }
@@ -212,6 +225,10 @@ final class AnyTokenPattern: TokenPattern {
 
 struct AnchorTokenPattern: TokenPattern {
     var location: Location
+    
+    var description: String {
+        return location == .start ? "^" : "$"
+    }
     
     init(at location: Location) {
         self.location = location
@@ -232,6 +249,9 @@ struct AnchorTokenPattern: TokenPattern {
 }
 
 struct EmptyTokenPattern: TokenPattern {
+    var description: String {
+        return ""
+    }
     func parse(from context: TokenParsingContext, index: TokenPatternIndex) -> TokenParsingResult {
         return .success
     }
@@ -240,10 +260,14 @@ struct EmptyTokenPattern: TokenPattern {
 struct OptionalTokenPattern<T>: TokenPattern where T: TokenPattern {
     var pattern: T
     
+    var description: String {
+        return pattern.description + "?"
+    }
+    
     init(_ pattern: T) {
         self.pattern = pattern
     }
-
+    
     func parse(from context: TokenParsingContext, index: TokenPatternIndex) -> TokenParsingResult {
         let newPattern = pattern || EmptyTokenPattern()
         return newPattern.parse(from: context, index: index)
@@ -259,6 +283,10 @@ struct RepeatingTokenPattern<T>: TokenPattern where T: TokenPattern {
     
     var pattern: T
     private var range: RangeBox
+    
+    var description: String {
+        return pattern.description + "{" + range.description + "}"
+    }
     
     private init(pattern: T, count: RangeBox) {
         self.pattern = pattern
@@ -430,6 +458,9 @@ extension TokenPattern {
 class RecursiveTokenPattern: TokenPattern {
     var pattern: AnyTokenPattern!
     
+    var description: String {
+        return "r(" + pattern.description + ")"
+    }
     init<T>(_ recursivePattern: (_ selfPattern: RecursiveTokenPattern) -> T) where T: TokenPattern {
         self.pattern = AnyTokenPattern(recursivePattern(self))
     }
@@ -441,6 +472,10 @@ class RecursiveTokenPattern: TokenPattern {
 class SharedTokenPattern: TokenPattern {
     
     var pattern: AnyTokenPattern
+    
+    var description: String {
+        return pattern.description
+    }
     
     init() {
         pattern = AnyTokenPattern(NeverTokenPattern())
@@ -455,7 +490,12 @@ class SharedTokenPattern: TokenPattern {
 }
 
 struct NeverTokenPattern: TokenPattern {
+    
     init() { }
+    
+    var description: String {
+        return "NEVER"
+    }
     
     func parse(from context: TokenParsingContext, index: TokenPatternIndex) -> TokenParsingResult {
         return .failure
@@ -475,8 +515,12 @@ extension String: TokenPattern {
 }
 
 struct RegexTokenPattern: TokenPattern {
-//    let pattern: String
+    //    let pattern: String
     let regex: NSRegularExpression
+    
+    var description: String {
+        return regex.pattern
+    }
     
     init(_ pattern: String, options: NSRegularExpression.Options = []) {
         guard let regex = try? NSRegularExpression(pattern: pattern, options: options) else {
@@ -492,15 +536,22 @@ struct RegexTokenPattern: TokenPattern {
         }
         let newIndex = Range(result.range, in: context.input)!.upperBound
         context.advanceIndex(to: newIndex)
-//        guard let range = context.input[context.currentIndex...].range(of: pattern, options: [.anchored, .regularExpression]) else {
-//            return .failure
-//        }
-//        context.advanceIndex(to: range.upperBound)
+        //        guard let range = context.input[context.currentIndex...].range(of: pattern, options: [.anchored, .regularExpression]) else {
+        //            return .failure
+        //        }
+        //        context.advanceIndex(to: range.upperBound)
         return .success
     }
 }
 
+extension KeyPath: CustomStringConvertible {
+    public var description: String {
+        return String(describing: self)
+    }
+}
+
 extension KeyPath: TokenPattern where Root == Character, Value == Bool {
+    
     func parse(from context: TokenParsingContext, index: TokenPatternIndex) -> TokenParsingResult {
         guard context.currentIndex < context.input.endIndex, context.input[context.currentIndex][keyPath: self] else {
             return .failure
@@ -527,10 +578,10 @@ extension Parsable {
         
         let (newIndex, recoveryPoints) = result
         
-        for recoveryPoint in recoveryPoints {
-            let recoveryPattern = TokenRecoveryPattern(recoveryPoint: recoveryPoint, classification: self)
-            context.addRecoveryPoint(at: index, pattern: recoveryPattern)
-        }
+        //        for recoveryPoint in recoveryPoints {
+        //            let recoveryPattern = TokenRecoveryPattern(recoveryPoint: recoveryPoint, classification: self)
+        //            context.addRecoveryPoint(at: index, pattern: recoveryPattern)
+        //        }
         
         let token = MatchedToken(classification: self, match: context.input[context.currentIndex..<newIndex])
         context.advance(to: newIndex, adding: token)
@@ -608,6 +659,7 @@ final class GrammarParsingContext<T> where T: Parsable {
     private(set) var consumedTokens = [MatchedToken<T>]()
     private(set) var currentIndex: String.Index {
         didSet {
+            
             if currentIndex > furthestIndex {
                 furthestIndex = currentIndex
             }
@@ -664,15 +716,19 @@ final class GrammarParsingContext<T> where T: Parsable {
     
     func addRecoveryPoint<P>(at index: GrammarPatternIndex, pattern: P) where P: GrammarPattern, P.Base == T {
         let snapshot = Snapshot(tokens: consumedTokens[...], currentIndex: currentIndex)
-        let recoveryPoint = RecoveryPoint(snapshot: snapshot, index: index, pattern: pattern)
-       
-        recoveryPoints.append(recoveryPoint)
+        addRecoveryPoint(at: index, from: snapshot, pattern: pattern)
     }
     func addRecoveryPoint<P>(at index: GrammarPatternIndex, from snapshot: Snapshot, pattern: P) where P: GrammarPattern, P.Base == T {
+        if let lastRecoveryPoint = recoveryPoints.last, index.isParent(of: lastRecoveryPoint.index) {//index.isParent(of: lastRecoveryPoint.index) {
+            return
+        }
         let recoveryPoint = RecoveryPoint(snapshot: snapshot, index: index, pattern: pattern)
         recoveryPoints.append(recoveryPoint)
     }
     
+    var lastRecoveryPoint: RecoveryPoint? {
+        return recoveryPoints.last
+    }
     func attemptRecovery() -> GrammarParsingResult {
         while let recoveryPoint = recoveryPoints.popLast() {
             let result = revert(to: recoveryPoint)
@@ -727,7 +783,7 @@ enum GrammarParsingResult {
 
 struct LogicalOrGrammarPattern<P1, P2>: GrammarPattern where P1: GrammarPattern, P2: GrammarPattern, P1.Base == P2.Base {
     typealias Base = P1.Base
-
+    
     var leftPattern: P1
     var rightPattern: P2
     
@@ -738,17 +794,20 @@ struct LogicalOrGrammarPattern<P1, P2>: GrammarPattern where P1: GrammarPattern,
     
     func parse(from context: GrammarParsingContext<Base>, index: GrammarPatternIndex) -> GrammarParsingResult {
         
-        
         // Generate snapshot of current context for new recovery point that is added if leftResult is successful
         let snapshot = context.generateSnapshot()
         
         let leftResult = leftPattern.parse(from: context, index: index.childIndex(stepping: .left))
-
+        
         // Update recovery points that are children of index, adding right-hand pattern
         context.updateRecovery(from: index) { $0 || rightPattern }
-
+        
         guard case .success = leftResult else {
+            //            if let lastRecoveryPoint = context.lastRecoveryPoint, index.isParent(of: lastRecoveryPoint.index) {
+            //                return .failure
+            //            } else {
             return rightPattern.parse(from: context, index: index)
+            //            }
         }
         
         // Add recovery point for right pattern using snapshot of initial state of context when being passed into this function
@@ -757,6 +816,7 @@ struct LogicalOrGrammarPattern<P1, P2>: GrammarPattern where P1: GrammarPattern,
         return .success
     }
 }
+
 func ||<T, U>(lhs: T, rhs: U) -> LogicalOrGrammarPattern<T, U> {
     return LogicalOrGrammarPattern(left: lhs, right: rhs)
 }
@@ -773,7 +833,7 @@ struct SequentialGrammarPattern<P1, P2>: GrammarPattern where P1: GrammarPattern
         // Update recovery points that are children of index, adding right-hand pattern
         /// - Note: This is done to reconstruct the total pattern in terms of the recovery point's pattern
         context.updateRecovery(from: index) { $0 + pattern2 }
-
+        
         guard case .success = result1 else {
             // Propogate failure upwards
             return .failure
@@ -830,6 +890,7 @@ struct OptionalGrammarPattern<T>: GrammarPattern where T: GrammarPattern {
     }
     
     func parse(from context: GrammarParsingContext<Base>, index: GrammarPatternIndex) -> GrammarParsingResult {
+        
         let newPattern = pattern || EmptyGrammarPattern()
         return newPattern.parse(from: context, index: index)
     }

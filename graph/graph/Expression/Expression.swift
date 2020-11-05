@@ -532,19 +532,19 @@ func createAST(from postfixData: (tokens: [Token], constantsAndFunctions: [Eithe
 }
 
 extension Expression {
-    init(_ string: String) {
-        do {
+    init(_ string: String) throws {
+//        do {
             let tokenizer = Tokenizer(using: TokenClassification.self)
             let tokens = try tokenizer.tokenize(string)
             let output = try postfixTokens(from: tokens)
             let expression = try createAST(from: output)
             self = expression
-        } catch let error as ParseError {
-            print(error.localizedDescription)
-            fatalError("Could not parse string to `Expression`.")
-        } catch {
-            fatalError("Could not parse string to `Expression`.")
-        }
+//        } catch let error as ParseError {
+//            print(error.localizedDescription)
+//            fatalError("Could not parse string to `Expression`.")
+//        } catch {
+//            fatalError("Could not parse string to `Expression`.")
+//        }
     }
 }
 
