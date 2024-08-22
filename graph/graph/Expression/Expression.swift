@@ -33,7 +33,7 @@ enum TokenClassification: Parsable, CaseIterable {
         switch self {
         case .left_parenthesis: return "("
         case .right_parenthesis: return ")"
-        case .number: return Self.digits + ("." + Self.digits).opt()
+        case .number: return RegexTokenPattern("\\d+(.\\d+)?")//Self.digits + ("." + Self.digits).opt()
         case .binary_operator: return "+" || "-" || "*" || "/" || "^"
         case .prefix_operator: return "+" || "-"
         case .postfix_operator: return "++" || "--"
@@ -591,7 +591,7 @@ func defineValuesForLookupTable() throws {
     try LookupTable.define(constant: .init("g", value: 9.81))
     try LookupTable.define(constant: .init("x", value: 0))
 
-    
+    try LookupTable.define(function: .init("abs", arity: 1) { abs($0[0]) })
     try LookupTable.define(function: .init("cos", arity: 1) { cos($0[0]) })
     try LookupTable.define(function: .init("sin", arity: 1) { sin($0[0]) })
     try LookupTable.define(function: .init("tan", arity: 1) { tan($0[0]) })

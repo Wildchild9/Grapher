@@ -93,10 +93,12 @@ final class TokenParsingContext {
     }
     
     func addRecoveryPoint(at index: TokenPatternIndex, pattern: TokenPattern) {
-        let recoveryPoint = RecoveryPoint(parsingIndex: currentIndex, index: index, pattern: pattern)
-        recoveryPoints.append(recoveryPoint)
+        addRecoveryPoint(at: index, from: currentIndex, pattern: pattern)
     }
     func addRecoveryPoint(at index: TokenPatternIndex, from parsingIndex: String.Index, pattern: TokenPattern) {
+//        if let lastRecoveryPoint = recoveryPoints.last, index.isParent(of: lastRecoveryPoint.index) {
+//            return
+//        }
         let recoveryPoint = RecoveryPoint(parsingIndex: parsingIndex, index: index, pattern: pattern)
         recoveryPoints.append(recoveryPoint)
     }
@@ -578,10 +580,10 @@ extension Parsable {
         
         let (newIndex, recoveryPoints) = result
         
-        //        for recoveryPoint in recoveryPoints {
-        //            let recoveryPattern = TokenRecoveryPattern(recoveryPoint: recoveryPoint, classification: self)
-        //            context.addRecoveryPoint(at: index, pattern: recoveryPattern)
-        //        }
+//        for recoveryPoint in recoveryPoints {
+//            let recoveryPattern = TokenRecoveryPattern(recoveryPoint: recoveryPoint, classification: self)
+//            context.addRecoveryPoint(at: index, pattern: recoveryPattern)
+//        }
         
         let token = MatchedToken(classification: self, match: context.input[context.currentIndex..<newIndex])
         context.advance(to: newIndex, adding: token)
